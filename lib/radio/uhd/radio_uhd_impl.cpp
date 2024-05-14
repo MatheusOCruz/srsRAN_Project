@@ -272,7 +272,7 @@ radio_session_uhd_impl::radio_session_uhd_impl(const radio_configuration::radio&
   }
 
   // Set sync source.
-  if (!device.set_sync_source(radio_config.clock)) {
+  if (!device.set_sync_source(radio_config.clock.sync)) {
     fmt::print("Error: couldn't set sync source: {}\n", device.get_error_message());
     return;
   }

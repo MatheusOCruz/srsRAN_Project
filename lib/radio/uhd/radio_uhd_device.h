@@ -221,7 +221,7 @@ public:
   bool set_sync_source(const radio_configuration::clock_sources& config)
   {
     // Convert clock source to string.
-    std::string clock_src;
+    std::string clock_src = "internal";
     switch (config.clock) {
       case radio_configuration::clock_sources::source::DEFAULT:
       case radio_configuration::clock_sources::source::INTERNAL:
@@ -233,10 +233,13 @@ public:
       case radio_configuration::clock_sources::source::GPSDO:
         clock_src = "gpsdo";
         break;
+      case radio_configuration::clock_sources::source::NONE:
+        clock_src = "internal";
+        break;
     }
 
     // Convert sync source to string.
-    std::string sync_src;
+    std::string sync_src = "none";
     switch (config.sync) {
       case radio_configuration::clock_sources::source::DEFAULT:
       case radio_configuration::clock_sources::source::INTERNAL:
@@ -248,12 +251,16 @@ public:
       case radio_configuration::clock_sources::source::GPSDO:
         sync_src = "gpsdo";
         break;
+      case radio_configuration::clock_sources::source::NONE:
+        sync_src = "none";
+        break;
     }
 
     logger.debug("Setting PPS source to '{}' and clock source to '{}'.", sync_src, clock_src);
 #if UHD_VERSION < 3140099
     return safe_execution([this, &sync_src, &clock_src]() {
       std::vector<std::string> time_sources = usrp->get_time_sources(0);
+      /*
       if (std::find(time_sources.begin(), time_sources.end(), sync_src) == time_sources.end()) {
         on_error("Invalid time source {}. Supported: {}", sync_src, span<const std::string>(time_sources));
         return;
@@ -263,9 +270,9 @@ public:
         on_error("Invalid clock source {}. Supported: {}", clock_src, span<const std::string>(clock_sources));
         return;
       }
-
-      usrp->set_time_source(sync_src);
-      usrp->set_clock_source(clock_src);
+      */
+      usrp->set_time_source("none");
+      usrp->set_clock_source("internal");
     });
 #else
     return safe_execution([this, &sync_source, &clock_source]() { usrp->set_sync_source(clock_source, sync_source); });

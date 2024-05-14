@@ -388,7 +388,6 @@ static void parse_args(int argc, char** argv)
 static radio_configuration::radio create_radio_configuration()
 {
   radio_configuration::radio radio_config = {};
-
   radio_config.clock.clock      = radio_configuration::to_clock_source(clock_source);
   radio_config.clock.sync       = radio_configuration::to_clock_source(sync_source);
   radio_config.sampling_rate_hz = srate.to_Hz<double>();
